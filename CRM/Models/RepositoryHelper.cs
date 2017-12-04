@@ -7,6 +7,20 @@ namespace CRM.Models
 			return new EFUnitOfWork();
 		}		
 		
+		public static CRMSummaryRepository GetCRMSummaryRepository()
+		{
+			var repository = new CRMSummaryRepository();
+			repository.UnitOfWork = GetUnitOfWork();
+			return repository;
+		}
+
+		public static CRMSummaryRepository GetCRMSummaryRepository(IUnitOfWork unitOfWork)
+		{
+			var repository = new CRMSummaryRepository();
+			repository.UnitOfWork = unitOfWork;
+			return repository;
+		}		
+
 		public static sysdiagramsRepository GetsysdiagramsRepository()
 		{
 			var repository = new sysdiagramsRepository();

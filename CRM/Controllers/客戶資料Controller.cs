@@ -17,6 +17,13 @@ namespace CRM.Controllers
         // GET: 客戶資料
         public ActionResult Index()
         {
+            var data = from c in db.客戶資料
+                       select new
+                       {
+                           c.客戶名稱,
+                           客戶聯絡人數量 = c.客戶聯絡人.Count(),
+                           客戶銀行資訊數量  = c.客戶銀行資訊.Count()
+                       };
             return View(db.客戶資料.ToList());
         }
 

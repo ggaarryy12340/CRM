@@ -1,14 +1,25 @@
 namespace CRM.Models
 {
+    using CRM.Models.DataTypes;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    
+    using System.Linq;
+
     [MetadataType(typeof(客戶聯絡人MetaData))]
-    public partial class 客戶聯絡人
+    public partial class 客戶聯絡人 : IValidatableObject
     {
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var repo = RepositoryHelper.Get客戶聯絡人Repository();
+
+            if (repo.All().Where(x => x.客戶Id == this.客戶Id).Any(x => x.Email == this.Email))
+            {
+                yield return new ValidationResult("同一個客戶下的聯絡人，其 Email 不能重複！", new string[] { "Email"});
+            }
+        }
     }
-    
+
     public partial class 客戶聯絡人MetaData
     {
         [Required]
@@ -30,6 +41,7 @@ namespace CRM.Models
         public string Email { get; set; }
         
         [StringLength(50, ErrorMessage="欄位長度不得大於 50 個字元")]
+        [CellPhone(ErrorMessage ="手機輸入格式須為:09xx-xxxxxx")]
         public string 手機 { get; set; }
         
         [StringLength(50, ErrorMessage="欄位長度不得大於 50 個字元")]
