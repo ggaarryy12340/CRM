@@ -12,13 +12,14 @@ namespace CRM.Controllers
 {
     public class 客戶銀行資訊Controller : Controller
     {
-        private CRMEntities db = new CRMEntities();
+        //private CRMEntities db = new CRMEntities();
+        客戶銀行資訊Repository Repo = RepositoryHelper.Get客戶銀行資訊Repository();
 
         // GET: 客戶銀行資訊
         public ActionResult Index()
         {
-            var 客戶銀行資訊 = db.客戶銀行資訊.Include(客 => 客.客戶資料);
-            return View(客戶銀行資訊.ToList());
+            var 客戶銀行資訊 = Repo.All().Include(客 => 客.客戶資料).ToList();
+            return View(客戶銀行資訊);
         }
 
         // GET: 客戶銀行資訊/Details/5
@@ -28,7 +29,7 @@ namespace CRM.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶銀行資訊 客戶銀行資訊 = db.客戶銀行資訊.Find(id);
+            客戶銀行資訊 客戶銀行資訊 = Repo.Find(id);
             if (客戶銀行資訊 == null)
             {
                 return HttpNotFound();
@@ -39,7 +40,7 @@ namespace CRM.Controllers
         // GET: 客戶銀行資訊/Create
         public ActionResult Create()
         {
-            ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱");
+            ViewBag.客戶Id = new SelectList(Repo.Get客戶資料List(), "Id", "客戶名稱");
             return View();
         }
 
@@ -52,12 +53,13 @@ namespace CRM.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.客戶銀行資訊.Add(客戶銀行資訊);
-                db.SaveChanges();
+                Repo.Add(客戶銀行資訊);
+                Repo.UnitOfWork.Commit();
+                TempData["Msg"] = "新增成功";
                 return RedirectToAction("Index");
             }
 
-            ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱", 客戶銀行資訊.客戶Id);
+            ViewBag.客戶Id = new SelectList(Repo.Get客戶資料List(), "Id", "客戶名稱", 客戶銀行資訊.客戶Id);
             return View(客戶銀行資訊);
         }
 
@@ -68,12 +70,12 @@ namespace CRM.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶銀行資訊 客戶銀行資訊 = db.客戶銀行資訊.Find(id);
+            客戶銀行資訊 客戶銀行資訊 = Repo.Find(id);
             if (客戶銀行資訊 == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱", 客戶銀行資訊.客戶Id);
+            ViewBag.客戶Id = new SelectList(Repo.Get客戶資料List(), "Id", "客戶名稱", 客戶銀行資訊.客戶Id);
             return View(客戶銀行資訊);
         }
 
@@ -86,11 +88,19 @@ namespace CRM.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(客戶銀行資訊).State = EntityState.Modified;
-                db.SaveChanges();
+                var item = Repo.Find(客戶銀行資訊.Id);
+                item.銀行名稱 = 客戶銀行資訊.銀行名稱;
+                item.銀行代碼 = 客戶銀行資訊.銀行代碼;
+                item.帳戶號碼 = 客戶銀行資訊.帳戶號碼;
+                item.帳戶名稱 = 客戶銀行資訊.帳戶名稱;
+                item.客戶Id = 客戶銀行資訊.客戶Id;
+                item.分行代碼 = 客戶銀行資訊.分行代碼;
+
+                Repo.UnitOfWork.Commit();
+                TempData["Msg"] = "修改成功";
                 return RedirectToAction("Index");
             }
-            ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱", 客戶銀行資訊.客戶Id);
+            ViewBag.客戶Id = new SelectList(Repo.Get客戶資料List(), "Id", "客戶名稱", 客戶銀行資訊.客戶Id);
             return View(客戶銀行資訊);
         }
 
@@ -101,7 +111,7 @@ namespace CRM.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶銀行資訊 客戶銀行資訊 = db.客戶銀行資訊.Find(id);
+            客戶銀行資訊 客戶銀行資訊 = Repo.Find(id);
             if (客戶銀行資訊 == null)
             {
                 return HttpNotFound();
@@ -114,9 +124,10 @@ namespace CRM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            客戶銀行資訊 客戶銀行資訊 = db.客戶銀行資訊.Find(id);
-            db.客戶銀行資訊.Remove(客戶銀行資訊);
-            db.SaveChanges();
+            客戶銀行資訊 客戶銀行資訊 = Repo.Find(id);
+            客戶銀行資訊.IsDeleted = true;
+            Repo.UnitOfWork.Commit();
+            TempData["Msg"] = "刪除成功";
             return RedirectToAction("Index");
         }
 
@@ -124,7 +135,7 @@ namespace CRM.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                Repo.Dispose();
             }
             base.Dispose(disposing);
         }

@@ -12,19 +12,14 @@ namespace CRM.Controllers
 {
     public class 客戶資料Controller : Controller
     {
-        private CRMEntities db = new CRMEntities();
+        //private CRMEntities db = new CRMEntities();
+        客戶資料Repository Repo = RepositoryHelper.Get客戶資料Repository();
 
         // GET: 客戶資料
         public ActionResult Index()
         {
-            var data = from c in db.客戶資料
-                       select new
-                       {
-                           c.客戶名稱,
-                           客戶聯絡人數量 = c.客戶聯絡人.Count(),
-                           客戶銀行資訊數量  = c.客戶銀行資訊.Count()
-                       };
-            return View(db.客戶資料.ToList());
+            var 客戶資料 = Repo.All();
+            return View(客戶資料.ToList());
         }
 
         // GET: 客戶資料/Details/5
@@ -34,7 +29,7 @@ namespace CRM.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
+            客戶資料 客戶資料 = Repo.Find(id);
             if (客戶資料 == null)
             {
                 return HttpNotFound();
@@ -57,8 +52,9 @@ namespace CRM.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.客戶資料.Add(客戶資料);
-                db.SaveChanges();
+                Repo.Add(客戶資料);
+                Repo.UnitOfWork.Commit();
+                TempData["Msg"] = "新增成功";
                 return RedirectToAction("Index");
             }
 
@@ -72,7 +68,7 @@ namespace CRM.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
+            客戶資料 客戶資料 = Repo.Find(id);
             if (客戶資料 == null)
             {
                 return HttpNotFound();
@@ -89,8 +85,16 @@ namespace CRM.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(客戶資料).State = EntityState.Modified;
-                db.SaveChanges();
+                var item = Repo.Find(客戶資料.Id);
+                item.Id = 客戶資料.Id;
+                item.Email = 客戶資料.Email;
+                item.傳真 = 客戶資料.傳真;
+                item.地址 = 客戶資料.地址;
+                item.客戶名稱 = 客戶資料.客戶名稱;
+                item.統一編號 = 客戶資料.統一編號;
+                item.電話 = 客戶資料.電話;
+                Repo.UnitOfWork.Commit();
+                TempData["Msg"] = "修改成功";
                 return RedirectToAction("Index");
             }
             return View(客戶資料);
@@ -103,7 +107,7 @@ namespace CRM.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
+            客戶資料 客戶資料 = Repo.Find(id);
             if (客戶資料 == null)
             {
                 return HttpNotFound();
@@ -116,9 +120,16 @@ namespace CRM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
-            db.客戶資料.Remove(客戶資料);
-            db.SaveChanges();
+
+            客戶資料 客戶資料 = Repo.Find(id);
+
+            客戶資料.IsDeleted = true;
+            客戶資料.客戶聯絡人.ToList().ForEach(c => c.IsDeleted = true);
+            客戶資料.客戶銀行資訊.ToList().ForEach(c => c.IsDeleted = true);
+
+            Repo.UnitOfWork.Commit();
+
+            TempData["Msg"] = "刪除成功";
             return RedirectToAction("Index");
         }
 
@@ -126,7 +137,7 @@ namespace CRM.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                Repo.Dispose();
             }
             base.Dispose(disposing);
         }

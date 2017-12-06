@@ -6,8 +6,22 @@ namespace CRM.Models
 {   
 	public  class 客戶銀行資訊Repository : EFRepository<客戶銀行資訊>, I客戶銀行資訊Repository
 	{
+        public override IQueryable<客戶銀行資訊> All()
+        {
+            return base.All().Where(x => x.IsDeleted != true);
+        }
 
-	}
+        public 客戶銀行資訊 Find(int? id)
+        {
+            return this.All().FirstOrDefault(x => x.Id == id);
+        }
+
+        public List<客戶資料> Get客戶資料List()
+        {
+            var Repo = RepositoryHelper.Get客戶資料Repository(this.UnitOfWork);
+            return Repo.All().ToList();
+        }
+    }
 
 	public  interface I客戶銀行資訊Repository : IRepository<客戶銀行資訊>
 	{

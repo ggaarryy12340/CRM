@@ -17,5 +17,6 @@ namespace CRM.Models
         public string 客戶名稱 { get; set; }
         public Nullable<int> 客戶聯絡人數量 { get; set; }
         public Nullable<int> 客戶銀行資訊數量 { get; set; }
+        public Nullable<bool> IsDeleted { get; set; }
     }
 }

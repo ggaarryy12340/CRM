@@ -12,19 +12,20 @@ namespace CRM.Controllers
 {
     public class CRMSummariesController : Controller
     {
-        private CRMEntities db = new CRMEntities();
+        //private CRMEntities db = new CRMEntities();
+        CRMSummaryRepository repo = RepositoryHelper.GetCRMSummaryRepository();
 
         // GET: CRMSummaries
         public ActionResult Index()
         {
-            return View(db.CRMSummary.ToList());
+            return View(repo.All().ToList());
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                db.Dispose();
+                repo.Dispose();
             }
             base.Dispose(disposing);
         }

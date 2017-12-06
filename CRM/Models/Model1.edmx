@@ -61,6 +61,7 @@
             <PropertyRef Name="客戶名稱" />
           </Key>
           <Property Name="客戶名稱" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" />
           <Property Name="客戶聯絡人數量" Type="int" />
           <Property Name="客戶銀行資訊數量" Type="int" />
         </EntityType>
@@ -96,6 +97,7 @@
           <EntitySet Name="CRMSummary" EntityType="Self.CRMSummary" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [CRMSummary].[客戶名稱] AS [客戶名稱], 
+    [CRMSummary].[IsDeleted] AS [IsDeleted], 
     [CRMSummary].[客戶聯絡人數量] AS [客戶聯絡人數量], 
     [CRMSummary].[客戶銀行資訊數量] AS [客戶銀行資訊數量]
     FROM [dbo].[CRMSummary] AS [CRMSummary]</DefiningQuery>
@@ -212,6 +214,7 @@
           <Property Name="客戶名稱" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="客戶聯絡人數量" Type="Int32" />
           <Property Name="客戶銀行資訊數量" Type="Int32" />
+          <Property Name="IsDeleted" Type="Boolean" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -275,6 +278,7 @@
           <EntitySetMapping Name="CRMSummary">
             <EntityTypeMapping TypeName="CRMModel.CRMSummary">
               <MappingFragment StoreEntitySet="CRMSummary">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="客戶銀行資訊數量" ColumnName="客戶銀行資訊數量" />
                 <ScalarProperty Name="客戶聯絡人數量" ColumnName="客戶聯絡人數量" />
                 <ScalarProperty Name="客戶名稱" ColumnName="客戶名稱" />
