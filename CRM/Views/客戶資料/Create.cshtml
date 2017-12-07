@@ -1,5 +1,4 @@
 ﻿@model CRM.Models.客戶資料
-
 @{
     ViewBag.Title = "Create";
 }
@@ -60,6 +59,12 @@
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.客戶分類, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @CustomTypeDropdownList.CreateCustomerTypeDropdownList("客戶分類Id", ViewBag.CustomerTypeList)
             </div>
         </div>
         @Html.HiddenFor(model => model.IsDeleted)

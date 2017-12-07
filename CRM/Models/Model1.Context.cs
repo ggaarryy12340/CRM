@@ -30,5 +30,6 @@ namespace CRM.Models
         public virtual DbSet<客戶銀行資訊> 客戶銀行資訊 { get; set; }
         public virtual DbSet<客戶聯絡人> 客戶聯絡人 { get; set; }
         public virtual DbSet<CRMSummary> CRMSummary { get; set; }
+        public virtual DbSet<客戶分類> 客戶分類 { get; set; }
     }
 }

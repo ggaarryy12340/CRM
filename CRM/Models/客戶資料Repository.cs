@@ -15,6 +15,12 @@ namespace CRM.Models
         {
             return this.All().FirstOrDefault(x => x.Id == id);
         }
+
+        public List<客戶分類> GetCostomerTypeList()
+        {
+            var Repo = RepositoryHelper.Get客戶分類Repository(this.UnitOfWork);
+            return Repo.All().ToList();
+        }
     }
 
 	public  interface I客戶資料Repository : IRepository<客戶資料>

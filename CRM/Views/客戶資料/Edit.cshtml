@@ -64,6 +64,13 @@
                 @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
             </div>
         </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.客戶分類, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @CustomTypeDropdownList.CreateCustomerTypeDropdownList("客戶分類Id", ViewBag.CustomerTypeList)
+            </div>
+        </div>
         @Html.HiddenFor(model => model.IsDeleted)
 
         <div class="form-group">
