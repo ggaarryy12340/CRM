@@ -21,6 +21,21 @@ namespace CRM.Models
             var Repo = RepositoryHelper.Get客戶資料Repository(this.UnitOfWork);
             return Repo.All().ToList();
         }
+
+        public List<string> Get職稱List()
+        {
+            return this.All().Select(x => x.職稱).Distinct().ToList();
+        }
+
+        public List<客戶聯絡人> SearchByTitle(string 職稱)
+        {
+            if (!string.IsNullOrEmpty(職稱))
+            {
+                return this.All().Where(x => x.職稱 == 職稱).ToList();
+            }
+
+            return this.All().ToList();
+        }
     }
 
 	public  interface I客戶聯絡人Repository : IRepository<客戶聯絡人>

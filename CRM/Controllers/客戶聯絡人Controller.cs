@@ -18,8 +18,25 @@ namespace CRM.Controllers
         // GET: 客戶聯絡人
         public ActionResult Index()
         {
+            ViewBag.TitleSelector = new SelectList(Repo.Get職稱List());
             var 客戶聯絡人 = Repo.All().Include(客 => 客.客戶資料);
             return View(客戶聯絡人.ToList());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(string 職稱)
+        {
+            if (ModelState.IsValid)
+            {
+                var 客戶聯絡人s = Repo.SearchByTitle(職稱);
+
+                ViewBag.TitleSelector = new SelectList(Repo.Get職稱List());
+                return View(客戶聯絡人s);
+            }
+
+            ViewBag.TitleSelector = new SelectList(Repo.Get職稱List());
+            return View();
         }
 
         // GET: 客戶聯絡人/Details/5

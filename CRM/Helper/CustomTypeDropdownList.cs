@@ -15,6 +15,7 @@ namespace CRM.Helper
         {
             var dropdown = new TagBuilder("select");
             dropdown.Attributes.Add("name", name);
+            dropdown.Attributes.Add("class", "form-control");
 
             StringBuilder option = new StringBuilder();
             if (option != null)

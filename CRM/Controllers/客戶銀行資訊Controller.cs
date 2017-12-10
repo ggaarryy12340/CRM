@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using CRM.Models;
+using CRM.Models.ViewModel;
 
 namespace CRM.Controllers
 {
@@ -18,8 +19,24 @@ namespace CRM.Controllers
         // GET: 客戶銀行資訊
         public ActionResult Index()
         {
-            var 客戶銀行資訊 = Repo.All().Include(客 => 客.客戶資料).ToList();
-            return View(客戶銀行資訊);
+            var vm = new 客戶銀行資訊VM()
+            {
+                客戶銀行資訊s = Repo.All().Include(客 => 客.客戶資料).ToList()
+            };
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(客戶銀行資訊VM vm)
+        {
+            if (ModelState.IsValid)
+            {
+                vm.客戶銀行資訊s = Repo.SearchByVM(vm);
+            }
+
+            return View(vm);
         }
 
         // GET: 客戶銀行資訊/Details/5

@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using CRM.Models;
+using CRM.Models.ViewModel;
 
 namespace CRM.Controllers
 {
@@ -18,8 +19,46 @@ namespace CRM.Controllers
         // GET: 客戶資料
         public ActionResult Index()
         {
-            var 客戶資料 = Repo.All();
-            return View(客戶資料.ToList());
+            var vm = new 客戶資料VM()
+            {
+                客戶資料s = Repo.All().ToList()
+            };
+
+            ViewBag.CustomerTypeList = Repo.GetCostomerTypeList();
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(int 客戶分類Id)
+        {
+            ViewBag.CustomerTypeList = Repo.GetCostomerTypeList();
+
+            if (ModelState.IsValid)
+            {
+                var vm = new 客戶資料VM()
+                {
+                    客戶資料s = Repo.SearchByType(客戶分類Id)
+                };
+
+                return View(vm);
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SearchFilter(客戶資料VM vm)
+        {
+            ViewBag.CustomerTypeList = Repo.GetCostomerTypeList();
+
+            if (ModelState.IsValid)
+            {
+                vm.客戶資料s = Repo.SearchByVM(vm);
+            }
+
+            return View("Index", vm);
         }
 
         // GET: 客戶資料/Details/5
@@ -100,6 +139,8 @@ namespace CRM.Controllers
                 item.客戶分類Id = 客戶資料.客戶分類Id;
                 Repo.UnitOfWork.Commit();
                 TempData["Msg"] = "修改成功";
+
+                ViewBag.CustomerTypeList = Repo.GetCostomerTypeList();
                 return RedirectToAction("Index");
             }
 
@@ -136,6 +177,7 @@ namespace CRM.Controllers
 
             Repo.UnitOfWork.Commit();
 
+            ViewBag.CustomerTypeList = Repo.GetCostomerTypeList();
             TempData["Msg"] = "刪除成功";
             return RedirectToAction("Index");
         }
