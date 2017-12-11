@@ -7,6 +7,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using CRM.Models;
+using ClosedXML.Excel;
+using System.IO;
 
 namespace CRM.Controllers
 {
@@ -37,6 +39,44 @@ namespace CRM.Controllers
 
             ViewBag.TitleSelector = new SelectList(Repo.Get職稱List());
             return View();
+        }
+        
+        public FileResult Export()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("客戶聯絡人");
+                List<客戶聯絡人> 客戶銀行資訊s = Repo.All().ToList();
+                var rowIndex = 2;
+
+                ws.Cell("A1").Value = "客戶名稱";
+                ws.Cell("B1").Value = "職稱";
+                ws.Cell("C1").Value = "姓名";
+                ws.Cell("D1").Value = "Email";
+                ws.Cell("E1").Value = "手機";
+                ws.Cell("F1").Value = "電話";
+                ws.Cell("G1").Value = "已刪除";
+
+                foreach (var item in 客戶銀行資訊s)
+                {
+                    ws.Cell("A" + rowIndex).Value = item.客戶資料.客戶名稱;
+                    ws.Cell("B" + rowIndex).Value = item.職稱;
+                    ws.Cell("C" + rowIndex).Value = item.姓名;
+                    ws.Cell("D" + rowIndex).Value = item.Email;
+                    ws.Cell("E" + rowIndex).Value = item.手機;
+                    ws.Cell("F" + rowIndex).Value = item.電話;
+                    ws.Cell("G" + rowIndex).Value = item.IsDeleted;
+
+                    rowIndex++;
+                }
+
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    wb.SaveAs(stream);
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "客戶聯絡人.xlsx");
+                }
+            }
+
         }
 
         // GET: 客戶聯絡人/Details/5

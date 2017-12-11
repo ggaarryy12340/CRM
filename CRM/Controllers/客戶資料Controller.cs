@@ -8,6 +8,8 @@ using System.Web;
 using System.Web.Mvc;
 using CRM.Models;
 using CRM.Models.ViewModel;
+using ClosedXML.Excel;
+using System.IO;
 
 namespace CRM.Controllers
 {
@@ -59,6 +61,48 @@ namespace CRM.Controllers
             }
 
             return View("Index", vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public FileResult Export(客戶資料VM vm)
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("客戶資料");
+                List<客戶資料> 客戶資料s = Repo.SearchByVM(vm);
+                var rowIndex = 2;
+
+                ws.Cell("A1").Value = "客戶名稱";
+                ws.Cell("B1").Value = "客戶分類";
+                ws.Cell("C1").Value = "統一編號";
+                ws.Cell("D1").Value = "電話";
+                ws.Cell("E1").Value = "傳真";
+                ws.Cell("F1").Value = "地址";
+                ws.Cell("G1").Value = "Email";
+                ws.Cell("H1").Value = "已刪除";
+
+                foreach (var item in 客戶資料s)
+                {
+                    ws.Cell("A" + rowIndex).Value = item.客戶名稱;
+                    ws.Cell("B" + rowIndex).Value = item.客戶分類;
+                    ws.Cell("C" + rowIndex).Value = item.統一編號;
+                    ws.Cell("D" + rowIndex).Value = item.電話;
+                    ws.Cell("E" + rowIndex).Value = item.傳真;
+                    ws.Cell("F" + rowIndex).Value = item.地址;
+                    ws.Cell("G" + rowIndex).Value = item.Email;
+                    ws.Cell("H" + rowIndex).Value = item.IsDeleted;
+
+                    rowIndex++;
+                }
+
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    wb.SaveAs(stream);
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "客戶資料.xlsx");
+                }
+            }
+
         }
 
         // GET: 客戶資料/Details/5
@@ -168,7 +212,6 @@ namespace CRM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-
             客戶資料 客戶資料 = Repo.Find(id);
 
             客戶資料.IsDeleted = true;

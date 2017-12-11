@@ -8,7 +8,7 @@
 
 <div class="row">
     <div class="col-lg-8">
-        @using (Html.BeginForm("SearchFilter", "客戶資料", FormMethod.Post))
+        @using (Html.BeginForm("SearchFilter", "客戶資料", FormMethod.Post,new { id = "Form"}))
         {
             @Html.AntiForgeryToken()
             <div class="panel panel-default">
@@ -84,6 +84,11 @@
                         <div class="col-lg-1">
                             <div style="margin-top:25px">
                                 <input type="submit" value="查詢" class="btn btn-info" />
+                            </div>
+                        </div>
+                        <div class="col-lg-1">
+                            <div style="margin-top:25px">
+                                <input type="button" value="匯出" class="btn btn-success" id="Export"/>
                             </div>
                         </div>
                     </div>
@@ -186,3 +191,12 @@
     }
 
 </table>
+
+<script type="text/javascript">
+
+    $("#Export").click(function () {
+        $("#Form").attr('action', '@Url.Action("Export","客戶資料")');
+        $("#Form").submit();
+    });
+
+</script>
