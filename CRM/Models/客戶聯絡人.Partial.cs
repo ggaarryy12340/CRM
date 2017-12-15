@@ -11,15 +11,31 @@ namespace CRM.Models
     {
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var repo = RepositoryHelper.Get客戶聯絡人Repository();
-            
+            var repo = RepositoryHelper.Get客戶聯絡人Repository();          
 
             if (!string.IsNullOrEmpty(this.Email))
             {
-                if (repo.All().Where(x => x.客戶Id == this.客戶Id).Any(x => x.Email == this.Email && x.Id != this.Id))
+                if (this.Id == 0)
                 {
-                    yield return new ValidationResult("同一個客戶下的聯絡人，其 Email 不能重複！", new string[] { "Email" });
+                    //Create
+                    if (repo.All().Where(x => x.客戶Id == this.客戶Id && x.Email == this.Email).Any())
+                    {
+                        yield return new ValidationResult("同一個客戶下的聯絡人，其 Email 不能重複！", new string[] { "Email" });
+                    }
                 }
+                else
+                {
+                    //update
+                    if (repo.All().Where(x => x.客戶Id == this.客戶Id && x.Email == this.Email && x.Id != this.Id).Any())
+                    {
+                        yield return new ValidationResult("同一個客戶下的聯絡人，其 Email 不能重複！", new string[] { "Email" });
+                    }
+                }
+
+                //if (repo.All().Where(x => x.客戶Id == this.客戶Id).Any(x => x.Email == this.Email && x.Id != this.Id))
+                //{
+                //    yield return new ValidationResult("同一個客戶下的聯絡人，其 Email 不能重複！", new string[] { "Email" });
+                //}
             }
         }
     }
