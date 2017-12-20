@@ -26,5 +26,12 @@ namespace CRM.Controllers
 
             return View();
         }
+
+        public ActionResult TestLayOut()
+        {
+            ViewBag.Message = "Your contact page.";
+
+            return View();
+        }
     }
 }
