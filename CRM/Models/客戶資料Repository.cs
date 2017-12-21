@@ -29,6 +29,12 @@ namespace CRM.Models
             return this.All().Where(x => x.客戶分類Id == 客戶分類Id).ToList();
         }
 
+        public List<客戶聯絡人> Get客戶聯絡人by客戶資料ID(int? id)
+        {
+            var Repo = RepositoryHelper.Get客戶聯絡人Repository(this.UnitOfWork);
+            return Repo.All().Where(x => x.客戶Id == id).ToList();
+        }
+
         public List<客戶資料> SearchByVM(客戶資料VM vm)
         {
             var query = this.All();

@@ -521,6 +521,7 @@
     <Content Include="Views\CRMSummaries\Index.cshtml" />
     <Content Include="Views\Shared\_LayoutMetro.cshtml" />
     <Content Include="Views\Home\TestLayOut.cshtml" />
+    <Content Include="Views\客戶資料\_Partail客戶聯絡人s.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

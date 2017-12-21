@@ -117,6 +117,8 @@ namespace CRM.Controllers
             {
                 return HttpNotFound();
             }
+
+            ViewBag.客戶聯絡人s = Repo.Get客戶聯絡人by客戶資料ID(id);
             return View(客戶資料);
         }
 
