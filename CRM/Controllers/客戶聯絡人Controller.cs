@@ -93,6 +93,12 @@ namespace CRM.Controllers
             }
             return View(客戶聯絡人);
         }
+        
+        public ActionResult Get客戶資料Partial(int 客戶聯絡人ID)
+        {
+            客戶資料 客戶資料 = Repo.Find(客戶聯絡人ID).客戶資料;
+            return PartialView("_Partial客戶資料", 客戶資料);
+        }
 
         // GET: 客戶聯絡人/Create
         public ActionResult Create()
