@@ -10,6 +10,7 @@ using CRM.Models;
 using ClosedXML.Excel;
 using System.IO;
 using CRM.ActionFilter;
+using System.Data.Entity.Validation;
 
 namespace CRM.Controllers
 {
@@ -112,6 +113,7 @@ namespace CRM.Controllers
         // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [HandleError(View = "ValidationErrorPage", ExceptionType = typeof(DbEntityValidationException))]
         public ActionResult Create([Bind(Include = "Id,客戶Id,職稱,姓名,Email,手機,電話,IsDeleted")] 客戶聯絡人 客戶聯絡人)
         {
             if (ModelState.IsValid)
