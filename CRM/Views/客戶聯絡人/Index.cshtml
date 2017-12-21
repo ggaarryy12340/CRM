@@ -19,10 +19,7 @@
                         <div class="col-lg-2">
                             <div class="form-group">
                                 <label>@Html.DisplayNameFor(model => model.職稱) :</label>
-                                        @Html.DropDownList("職稱",
-                                        TitleSelector,
-                                        "",
-                                        new { @class = "form-control" })
+                                        @Html.DropDownList("職稱", TitleSelector,"",new { @class = "form-control" })
                                 <p class="help-block"></p>
                             </div>
                         </div>

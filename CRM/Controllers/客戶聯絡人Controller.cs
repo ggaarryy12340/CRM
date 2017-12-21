@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using CRM.Models;
 using ClosedXML.Excel;
 using System.IO;
+using CRM.ActionFilter;
 
 namespace CRM.Controllers
 {
@@ -18,6 +19,7 @@ namespace CRM.Controllers
         客戶聯絡人Repository Repo = RepositoryHelper.Get客戶聯絡人Repository();
 
         // GET: 客戶聯絡人
+        [TitleSelector]
         public ActionResult Index()
         {
             ViewBag.TitleSelector = new SelectList(Repo.Get職稱List());
@@ -26,18 +28,16 @@ namespace CRM.Controllers
         }
 
         [HttpPost]
+        [TitleSelector]
         [ValidateAntiForgeryToken]
         public ActionResult Index(string 職稱)
         {
             if (ModelState.IsValid)
             {
                 var 客戶聯絡人s = Repo.SearchByTitle(職稱);
-
-                ViewBag.TitleSelector = new SelectList(Repo.Get職稱List());
                 return View(客戶聯絡人s);
             }
-
-            ViewBag.TitleSelector = new SelectList(Repo.Get職稱List());
+ 
             return View();
         }
         
