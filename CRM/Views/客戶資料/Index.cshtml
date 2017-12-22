@@ -25,7 +25,7 @@
                         <div class="col-lg-3">
                             <div class="form-group">
                                 <label>@Html.DisplayNameFor(model => model.客戶分類Id)</label>
-                                @CustomTypeDropdownList.CreateCustomerTypeDropdownList("客戶分類Id", ViewBag.CustomerTypeList)
+                                @Html.DropDownListFor(x => x.客戶分類Id, null, new { @class = "form-control" })
                                 <p class="help-block"></p>
                             </div>
                         </div>
@@ -54,15 +54,7 @@
                             <div class="form-group">
                                 <label>@Html.DisplayNameFor(model => model.排序)</label>
 
-                                @Html.DropDownListFor(x => x.排序, new List<SelectListItem>
-                                {
-                                                    new SelectListItem() {Text = "", Value=""},
-                                                    new SelectListItem() {Text = "客戶名稱", Value="客戶名稱"},
-                                                    new SelectListItem() {Text = "客戶分類Id", Value="客戶分類Id"},
-                                                    new SelectListItem() {Text = "統一編號", Value="統一編號"},
-                                                    new SelectListItem() {Text = "電話", Value="電話"},
-                                                    new SelectListItem() {Text = "Email", Value="Email"}
-                                }, new { @class = "form-control"})
+                                @Html.DropDownListFor(x => x.排序, null, new { @class = "form-control"})
 
                                 <p class="help-block"></p>
                             </div>
@@ -71,12 +63,7 @@
                             <div class="form-group">
                                 <label>@Html.DisplayNameFor(model => model.升降)</label>
 
-                                @Html.DropDownListFor(x => x.升降, new List<SelectListItem>
-                                {
-                                                    new SelectListItem() {Text = "", Value=""},
-                                                    new SelectListItem() {Text = "升冪", Value="升冪"},
-                                                    new SelectListItem() {Text = "降冪", Value="降冪"}
-                                }, new { @class = "form-control"})
+                                @Html.DropDownListFor(x => x.升降, null, new { @class = "form-control"})
 
                                 <p class="help-block"></p>
                             </div>
@@ -107,7 +94,7 @@
                         <div class="col-lg-5">
                             <div class="form-group">
                                 <label>@Html.DisplayNameFor(model => model.客戶資料s.FirstOrDefault().客戶分類) :</label>
-                                @CustomTypeDropdownList.CreateCustomerTypeDropdownList("客戶分類Id", ViewBag.CustomerTypeList)
+                                @Html.DropDownListFor(x => x.客戶分類Id, null, new { @class = "form-control" })
                                 <p class="help-block"></p>
                             </div>
                         </div>

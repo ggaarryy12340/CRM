@@ -64,7 +64,9 @@
         <div class="form-group">
             @Html.LabelFor(model => model.客戶分類, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @CustomTypeDropdownList.CreateCustomerTypeDropdownList("客戶分類Id", ViewBag.CustomerTypeList)
+
+                @Html.DropDownListFor(x => x.客戶分類Id, null, new { @class = "form-control" })
+                
             </div>
         </div>
         @Html.HiddenFor(model => model.IsDeleted)

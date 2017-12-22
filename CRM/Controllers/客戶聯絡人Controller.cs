@@ -116,13 +116,13 @@ namespace CRM.Controllers
         [HandleError(View = "ValidationErrorPage", ExceptionType = typeof(DbEntityValidationException))]
         public ActionResult Create([Bind(Include = "Id,客戶Id,職稱,姓名,Email,手機,電話,IsDeleted")] 客戶聯絡人 客戶聯絡人)
         {
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 Repo.Add(客戶聯絡人);
                 Repo.UnitOfWork.Commit();
                 TempData["Msg"] = "新增成功";
                 return RedirectToAction("Index");
-            }
+            //}
 
             ViewBag.客戶Id = new SelectList(Repo.Get客戶資料List(), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
             return View(客戶聯絡人);

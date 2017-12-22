@@ -10,6 +10,7 @@ using CRM.Models;
 using CRM.Models.ViewModel;
 using ClosedXML.Excel;
 using System.IO;
+using CRM.ActionFilter;
 
 namespace CRM.Controllers
 {
@@ -19,22 +20,22 @@ namespace CRM.Controllers
         客戶資料Repository Repo = RepositoryHelper.Get客戶資料Repository();
 
         // GET: 客戶資料
+        [客戶資料DropDownList]
         public ActionResult Index()
         {
             var vm = new 客戶資料VM()
             {
                 客戶資料s = Repo.All().ToList()
             };
-
-            ViewBag.CustomerTypeList = Repo.GetCostomerTypeList();
+            
             return View(vm);
         }
 
         [HttpPost]
+        [客戶資料DropDownList]
         [ValidateAntiForgeryToken]
         public ActionResult Index(int 客戶分類Id)
         {
-            ViewBag.CustomerTypeList = Repo.GetCostomerTypeList();
 
             if (ModelState.IsValid)
             {
@@ -50,10 +51,10 @@ namespace CRM.Controllers
         }
 
         [HttpPost]
+        [客戶資料DropDownList]
         [ValidateAntiForgeryToken]
         public ActionResult SearchFilter(客戶資料VM vm)
         {
-            ViewBag.CustomerTypeList = Repo.GetCostomerTypeList();
 
             if (ModelState.IsValid)
             {
@@ -123,9 +124,9 @@ namespace CRM.Controllers
         }
 
         // GET: 客戶資料/Create
+        [客戶資料DropDownList]
         public ActionResult Create()
         {
-            ViewBag.CustomerTypeList = Repo.GetCostomerTypeList();
             return View();
         }
 
@@ -133,6 +134,7 @@ namespace CRM.Controllers
         // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
         // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
+        [客戶資料DropDownList]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email,IsDeleted,客戶分類Id")] 客戶資料 客戶資料)
         {
@@ -143,12 +145,12 @@ namespace CRM.Controllers
                 TempData["Msg"] = "新增成功";
                 return RedirectToAction("Index");
             }
-
-            ViewBag.CustomerTypeList = Repo.GetCostomerTypeList();
+            
             return View(客戶資料);
         }
 
         // GET: 客戶資料/Edit/5
+
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -160,8 +162,7 @@ namespace CRM.Controllers
             {
                 return HttpNotFound();
             }
-
-            ViewBag.CustomerTypeList = Repo.GetCostomerTypeList();
+            
             return View(客戶資料);
         }
 
@@ -169,6 +170,7 @@ namespace CRM.Controllers
         // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
         // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
+        [客戶資料DropDownList]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email,IsDeleted,客戶分類Id")] 客戶資料 客戶資料)
         {
@@ -185,12 +187,10 @@ namespace CRM.Controllers
                 item.客戶分類Id = 客戶資料.客戶分類Id;
                 Repo.UnitOfWork.Commit();
                 TempData["Msg"] = "修改成功";
-
-                ViewBag.CustomerTypeList = Repo.GetCostomerTypeList();
+                
                 return RedirectToAction("Index");
             }
-
-            ViewBag.CustomerTypeList = Repo.GetCostomerTypeList();
+            
             return View(客戶資料);
         }
 
@@ -211,6 +211,7 @@ namespace CRM.Controllers
 
         // POST: 客戶資料/Delete/5
         [HttpPost, ActionName("Delete")]
+        [客戶資料DropDownList]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
@@ -221,8 +222,7 @@ namespace CRM.Controllers
             客戶資料.客戶銀行資訊.ToList().ForEach(c => c.IsDeleted = true);
 
             Repo.UnitOfWork.Commit();
-
-            ViewBag.CustomerTypeList = Repo.GetCostomerTypeList();
+            
             TempData["Msg"] = "刪除成功";
             return RedirectToAction("Index");
         }

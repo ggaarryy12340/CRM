@@ -43,7 +43,7 @@ namespace CRM.Models
             {
                 query = query.Where(x => x.客戶名稱.Contains(vm.客戶名稱));
             }
-            if (vm.客戶分類Id != null)
+            if (vm.客戶分類Id != 0)
             {
                 query = query.Where(x => x.客戶分類Id == vm.客戶分類Id);
             }
