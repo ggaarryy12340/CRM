@@ -527,6 +527,8 @@
     <Content Include="Views\客戶聯絡人\_Partial客戶資料.cshtml" />
     <Content Include="Views\Shared\ValidationErrorPage.cshtml" />
     <Content Include="Views\客戶銀行資訊\DisplayTemplates\客戶銀行資訊.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\電話.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\傳真.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

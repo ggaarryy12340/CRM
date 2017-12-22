@@ -22,10 +22,12 @@ namespace CRM.Models
         [Required]
         public string 統一編號 { get; set; }
         
+        [UIHint("電話")]
         [StringLength(50, ErrorMessage="欄位長度不得大於 50 個字元")]
         [Required]
         public string 電話 { get; set; }
         
+        [UIHint("傳真")]
         [StringLength(50, ErrorMessage="欄位長度不得大於 50 個字元")]
         public string 傳真 { get; set; }
         
