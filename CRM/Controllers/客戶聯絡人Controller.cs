@@ -11,31 +11,38 @@ using ClosedXML.Excel;
 using System.IO;
 using CRM.ActionFilter;
 using System.Data.Entity.Validation;
+using PagedList;
 
 namespace CRM.Controllers
 {
     public class 客戶聯絡人Controller : Controller
     {
+        private int PageSize = 2;
         //private CRMEntities db = new CRMEntities();
         客戶聯絡人Repository Repo = RepositoryHelper.Get客戶聯絡人Repository();
 
         // GET: 客戶聯絡人
         [TitleSelector]
-        public ActionResult Index()
+        public ActionResult Index(int page = 1)
         {
-            ViewBag.TitleSelector = new SelectList(Repo.Get職稱List());
-            var 客戶聯絡人 = Repo.All().Include(客 => 客.客戶資料);
-            return View(客戶聯絡人.ToList());
+            int CurrentPage = page < 1 ? 1 : page;
+
+            var 客戶聯絡人PagedList = Repo.All().Include(客 => 客.客戶資料).OrderBy(x => x.Id).ToPagedList(CurrentPage, PageSize);
+        //    ViewBag.TitleSelector = new SelectList(Repo.Get職稱List());
+
+            return View(客戶聯絡人PagedList);
         }
 
         [HttpPost]
         [TitleSelector]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(string 職稱)
+        public ActionResult Index(string 職稱, int page = 1)
         {
+            int CurrentPage = page < 1 ? 1 : page;
+
             if (ModelState.IsValid)
             {
-                var 客戶聯絡人s = Repo.SearchByTitle(職稱);
+                var 客戶聯絡人s = Repo.SearchByTitle(職稱).OrderBy(x => x.Id).ToPagedList(CurrentPage, PageSize);
                 return View(客戶聯絡人s);
             }
  
