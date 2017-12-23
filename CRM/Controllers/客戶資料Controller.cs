@@ -16,7 +16,6 @@ namespace CRM.Controllers
 {
     public class 客戶資料Controller : Controller
     {
-        //private CRMEntities db = new CRMEntities();
         客戶資料Repository Repo = RepositoryHelper.Get客戶資料Repository();
 
         // GET: 客戶資料
@@ -64,47 +63,6 @@ namespace CRM.Controllers
             return View("Index", vm);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public FileResult Export(客戶資料VM vm)
-        {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.Worksheets.Add("客戶資料");
-                List<客戶資料> 客戶資料s = Repo.SearchByVM(vm);
-                var rowIndex = 2;
-
-                ws.Cell("A1").Value = "客戶名稱";
-                ws.Cell("B1").Value = "客戶分類";
-                ws.Cell("C1").Value = "統一編號";
-                ws.Cell("D1").Value = "電話";
-                ws.Cell("E1").Value = "傳真";
-                ws.Cell("F1").Value = "地址";
-                ws.Cell("G1").Value = "Email";
-                ws.Cell("H1").Value = "已刪除";
-
-                foreach (var item in 客戶資料s)
-                {
-                    ws.Cell("A" + rowIndex).Value = item.客戶名稱;
-                    ws.Cell("B" + rowIndex).Value = item.客戶分類;
-                    ws.Cell("C" + rowIndex).Value = item.統一編號;
-                    ws.Cell("D" + rowIndex).Value = item.電話;
-                    ws.Cell("E" + rowIndex).Value = item.傳真;
-                    ws.Cell("F" + rowIndex).Value = item.地址;
-                    ws.Cell("G" + rowIndex).Value = item.Email;
-                    ws.Cell("H" + rowIndex).Value = item.IsDeleted;
-
-                    rowIndex++;
-                }
-
-                using (MemoryStream stream = new MemoryStream())
-                {
-                    wb.SaveAs(stream);
-                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "客戶資料.xlsx");
-                }
-            }
-
-        }
 
         // GET: 客戶資料/Details/5
         public ActionResult Details(int? id)
@@ -150,7 +108,7 @@ namespace CRM.Controllers
         }
 
         // GET: 客戶資料/Edit/5
-
+        [客戶資料DropDownList]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -227,13 +185,55 @@ namespace CRM.Controllers
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public FileResult Export(客戶資料VM vm)
         {
-            if (disposing)
+            using (var wb = new XLWorkbook())
             {
-                Repo.Dispose();
+                var ws = wb.Worksheets.Add("客戶資料");
+                List<客戶資料> 客戶資料s = Repo.SearchByVM(vm);
+                var rowIndex = 2;
+
+                ws.Cell("A1").Value = "客戶名稱";
+                ws.Cell("B1").Value = "客戶分類";
+                ws.Cell("C1").Value = "統一編號";
+                ws.Cell("D1").Value = "電話";
+                ws.Cell("E1").Value = "傳真";
+                ws.Cell("F1").Value = "地址";
+                ws.Cell("G1").Value = "Email";
+                ws.Cell("H1").Value = "已刪除";
+
+                foreach (var item in 客戶資料s)
+                {
+                    ws.Cell("A" + rowIndex).Value = item.客戶名稱;
+                    ws.Cell("B" + rowIndex).Value = item.客戶分類;
+                    ws.Cell("C" + rowIndex).Value = item.統一編號;
+                    ws.Cell("D" + rowIndex).Value = item.電話;
+                    ws.Cell("E" + rowIndex).Value = item.傳真;
+                    ws.Cell("F" + rowIndex).Value = item.地址;
+                    ws.Cell("G" + rowIndex).Value = item.Email;
+                    ws.Cell("H" + rowIndex).Value = item.IsDeleted;
+
+                    rowIndex++;
+                }
+
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    wb.SaveAs(stream);
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "客戶資料.xlsx");
+                }
             }
-            base.Dispose(disposing);
+
         }
+
+        //protected override void Dispose(bool disposing)
+        //{
+        //    if (disposing)
+        //    {
+        //        Repo.Dispose();
+        //    }
+        //    base.Dispose(disposing);
+        //}
     }
 }

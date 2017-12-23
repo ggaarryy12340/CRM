@@ -18,7 +18,6 @@ namespace CRM.Controllers
     public class 客戶聯絡人Controller : Controller
     {
         private int PageSize = 2;
-        //private CRMEntities db = new CRMEntities();
         客戶聯絡人Repository Repo = RepositoryHelper.Get客戶聯絡人Repository();
 
         // GET: 客戶聯絡人
@@ -28,7 +27,6 @@ namespace CRM.Controllers
             int CurrentPage = page < 1 ? 1 : page;
 
             var 客戶聯絡人PagedList = Repo.All().Include(客 => 客.客戶資料).OrderBy(x => x.Id).ToPagedList(CurrentPage, PageSize);
-        //    ViewBag.TitleSelector = new SelectList(Repo.Get職稱List());
 
             return View(客戶聯絡人PagedList);
         }
@@ -48,44 +46,7 @@ namespace CRM.Controllers
  
             return View();
         }
-        
-        public FileResult Export()
-        {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.Worksheets.Add("客戶聯絡人");
-                List<客戶聯絡人> 客戶銀行資訊s = Repo.All().ToList();
-                var rowIndex = 2;
 
-                ws.Cell("A1").Value = "客戶名稱";
-                ws.Cell("B1").Value = "職稱";
-                ws.Cell("C1").Value = "姓名";
-                ws.Cell("D1").Value = "Email";
-                ws.Cell("E1").Value = "手機";
-                ws.Cell("F1").Value = "電話";
-                ws.Cell("G1").Value = "已刪除";
-
-                foreach (var item in 客戶銀行資訊s)
-                {
-                    ws.Cell("A" + rowIndex).Value = item.客戶資料.客戶名稱;
-                    ws.Cell("B" + rowIndex).Value = item.職稱;
-                    ws.Cell("C" + rowIndex).Value = item.姓名;
-                    ws.Cell("D" + rowIndex).Value = item.Email;
-                    ws.Cell("E" + rowIndex).Value = item.手機;
-                    ws.Cell("F" + rowIndex).Value = item.電話;
-                    ws.Cell("G" + rowIndex).Value = item.IsDeleted;
-
-                    rowIndex++;
-                }
-
-                using (MemoryStream stream = new MemoryStream())
-                {
-                    wb.SaveAs(stream);
-                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "客戶聯絡人.xlsx");
-                }
-            }
-
-        }
 
         // GET: 客戶聯絡人/Details/5
         public ActionResult Details(int? id)
@@ -123,13 +84,13 @@ namespace CRM.Controllers
         [HandleError(View = "ValidationErrorPage", ExceptionType = typeof(DbEntityValidationException))]
         public ActionResult Create([Bind(Include = "Id,客戶Id,職稱,姓名,Email,手機,電話,IsDeleted")] 客戶聯絡人 客戶聯絡人)
         {
-            //if (ModelState.IsValid)
-            //{
+            if (ModelState.IsValid)
+            {
                 Repo.Add(客戶聯絡人);
                 Repo.UnitOfWork.Commit();
                 TempData["Msg"] = "新增成功";
                 return RedirectToAction("Index");
-            //}
+            }
 
             ViewBag.客戶Id = new SelectList(Repo.Get客戶資料List(), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
             return View(客戶聯絡人);
@@ -205,13 +166,53 @@ namespace CRM.Controllers
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public FileResult Export()
         {
-            if (disposing)
+            using (var wb = new XLWorkbook())
             {
-                Repo.Dispose();
+                var ws = wb.Worksheets.Add("客戶聯絡人");
+                List<客戶聯絡人> 客戶銀行資訊s = Repo.All().ToList();
+                var rowIndex = 2;
+
+                ws.Cell("A1").Value = "客戶名稱";
+                ws.Cell("B1").Value = "職稱";
+                ws.Cell("C1").Value = "姓名";
+                ws.Cell("D1").Value = "Email";
+                ws.Cell("E1").Value = "手機";
+                ws.Cell("F1").Value = "電話";
+                ws.Cell("G1").Value = "已刪除";
+
+                foreach (var item in 客戶銀行資訊s)
+                {
+                    ws.Cell("A" + rowIndex).Value = item.客戶資料.客戶名稱;
+                    ws.Cell("B" + rowIndex).Value = item.職稱;
+                    ws.Cell("C" + rowIndex).Value = item.姓名;
+                    ws.Cell("D" + rowIndex).Value = item.Email;
+                    ws.Cell("E" + rowIndex).Value = item.手機;
+                    ws.Cell("F" + rowIndex).Value = item.電話;
+                    ws.Cell("G" + rowIndex).Value = item.IsDeleted;
+
+                    rowIndex++;
+                }
+
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    wb.SaveAs(stream);
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "客戶聯絡人.xlsx");
+                }
             }
-            base.Dispose(disposing);
+
         }
+
+        //protected override void Dispose(bool disposing)
+        //{
+        //    if (disposing)
+        //    {
+        //        Repo.Dispose();
+        //    }
+        //    base.Dispose(disposing);
+        //}
     }
 }
