@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace CRM.Models
 {
-	public partial class EFRepository<T> : IRepository<T> where T : class
+	public class EFRepository<T> : IRepository<T> where T : class
 	{
 		public IUnitOfWork UnitOfWork { get; set; }
 		
